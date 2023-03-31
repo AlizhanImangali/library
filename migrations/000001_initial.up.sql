@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS authors
+  (
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     id         SERIAL PRIMARY KEY,
+     full_name  VARCHAR NOT NULL,
+     pseudonym  VARCHAR NOT NULL,
+     specialty  VARCHAR NOT NULL
+  );
+
+CREATE TABLE IF NOT EXISTS books
+  (
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     id         SERIAL PRIMARY KEY,
+     name       VARCHAR NOT NULL,
+     genre      VARCHAR NOT NULL,
+     code_isbn  VARCHAR NOT NULL
+  );
+
+CREATE TABLE IF NOT EXISTS readers
+  (
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     id         SERIAL PRIMARY KEY,
+     full_name  VARCHAR NOT NULL,
+     book_list  VARCHAR NOT NULL
+  );
