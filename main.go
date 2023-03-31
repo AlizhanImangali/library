@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"net/http"
 	"os"
 )
 
@@ -21,9 +22,9 @@ func main() {
 		return
 	}
 	defer postgres.Close()
-
+	//postgres://habrpguser:pgpwd4habr@localhost:6432/library?sslmode=disable
 	// migrate up database
-	err = database2.Migrate("postgres://habrpguser:pgpwd4habr@localhost:6432/library?sslmode=disable")
+	err = database2.Migrate(databaseSourceName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -68,6 +69,11 @@ func main() {
 	readerGroup.PUT("/:id", readerHandler.Update)
 	readerGroup.DELETE("/:id", readerHandler.Delete)
 
+	//health
+	health := apiGroup.Group("/health")
+	health.GET("", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]any{"status": "ok", "code": 200, "success": true})
+	})
 	// start server
 	fmt.Println("server running on: http://localhost")
 	e.Logger.Fatal(e.Start(":81"))
