@@ -23,7 +23,7 @@ func main() {
 	}
 	defer postgres.Close()
 	//postgres://habrpguser:pgpwd4habr@localhost:6432/library?sslmode=disable
-	// migrate up database
+	// migrate up databasegit
 	err = database2.Migrate(databaseSourceName)
 	if err != nil {
 		fmt.Println(err.Error())
