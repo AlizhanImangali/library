@@ -1,22 +1,24 @@
 package main
 
 import (
-	author2 "crud/domain/author"
-	book2 "crud/domain/book"
-	reader2 "crud/domain/reader"
-	database2 "crud/pkg/database"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 	"os"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+
+	"crud/domain/author"
+	"crud/domain/book"
+	"crud/domain/reader"
+	"crud/pkg/database"
 )
 
 func main() {
 	databaseSourceName := os.Getenv("DATABASE_URL")
 
 	// init database instance
-	postgres, err := database2.New(databaseSourceName)
+	postgres, err := database.New(databaseSourceName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -24,21 +26,21 @@ func main() {
 	defer postgres.Close()
 	//postgres://habrpguser:pgpwd4habr@localhost:6432/library?sslmode=disable
 	// migrate up databasegit
-	err = database2.Migrate(databaseSourceName)
+	err = database.Migrate(databaseSourceName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
 	// init handlers
-	authorStorage := author2.NewStorage(postgres)
-	authorHandler := author2.NewHandler(authorStorage)
+	authorStorage := author.NewStorage(postgres)
+	authorHandler := author.NewHandler(authorStorage)
 
-	bookStorage := book2.NewStorage(postgres)
-	bookHandler := book2.NewHandler(bookStorage)
+	bookStorage := book.NewStorage(postgres)
+	bookHandler := book.NewHandler(bookStorage)
 
-	readerStorage := reader2.NewStorage(postgres)
-	readerHandler := reader2.NewHandler(readerStorage)
+	readerStorage := reader.NewStorage(postgres)
+	readerHandler := reader.NewHandler(readerStorage)
 
 	// setup middleware
 	e := echo.New()
@@ -75,6 +77,5 @@ func main() {
 		return c.JSON(http.StatusOK, map[string]any{"status": "ok", "code": 200, "success": true})
 	})
 	// start server
-	fmt.Println("server running on: http://localhost")
-	e.Logger.Fatal(e.Start(":81"))
+	e.Logger.Fatal(e.Start(":8081"))
 }
