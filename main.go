@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
@@ -10,23 +9,27 @@ import (
 
 	"crud/domain/author"
 	"crud/domain/book"
+	"crud/domain/health"
 	"crud/domain/reader"
 	"crud/pkg/database"
 )
 
 func main() {
-	databaseSourceName := os.Getenv("DATABASE_URL")
+	Postgres := os.Getenv("POSTGRES_URL")
+
+	googleURL := os.Getenv("GOOGLE_URL")
 
 	// init database instance
-	postgres, err := database.New(databaseSourceName)
+	postgres, err := database.New(Postgres)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 	defer postgres.Close()
+	//postgres://postgres:postgrespw@localhost:6432/library?sslmode=disable
 	//postgres://habrpguser:pgpwd4habr@localhost:6432/library?sslmode=disable
 	// migrate up databasegit
-	err = database.Migrate(databaseSourceName)
+	err = database.Migrate(Postgres)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -41,6 +44,8 @@ func main() {
 
 	readerStorage := reader.NewStorage(postgres)
 	readerHandler := reader.NewHandler(readerStorage)
+
+	healthHandler := health.NewHandler(googleURL, Postgres)
 
 	// setup middleware
 	e := echo.New()
@@ -73,9 +78,7 @@ func main() {
 
 	//health
 	health := apiGroup.Group("/health")
-	health.GET("", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]any{"status": "ok", "code": 200, "success": true})
-	})
+	health.GET("", healthHandler.Health)
 	// start server
 	e.Logger.Fatal(e.Start(":8081"))
 }
