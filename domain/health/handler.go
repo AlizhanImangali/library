@@ -22,8 +22,7 @@ func NewHandler(googleUrl, postgres string) *Handler {
 	}
 }
 func (h *Handler) Health(c echo.Context) (err error) {
-	check, _ := health.New(health.WithSystemInfo())
-	health.WithComponent(health.Component{Name: "library", Version: "1.0.1"})
+	check, _ := health.New(health.WithSystemInfo(), health.WithComponent(health.Component{Name: "library", Version: "1.0.1"}))
 	err = check.Register(health.Config{
 		Name:      "postgres",
 		Timeout:   time.Second * 5,
