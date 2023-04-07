@@ -60,7 +60,7 @@ func (s *storage) SelectRows() (dest []Book, err error) {
 	defer cancel()
 
 	query := `
-		SELECT  id, name, genre,codeisbn
+		SELECT  id, name, genre, codeisbn
 		FROM books
 		ORDER BY id`
 
@@ -86,6 +86,10 @@ func (s *storage) UpdateRow(data Book) (err error) {
 }
 
 func (s *storage) prepareArgs(data Book) (sets []string, args []any) {
+	if data.Name != nil {
+		args = append(args, data.Name)
+		sets = append(sets, fmt.Sprintf("name=$%d", len(args)))
+	}
 	if data.Genre != nil {
 		args = append(args, data.Genre)
 		sets = append(sets, fmt.Sprintf("genre=$%d", len(args)))

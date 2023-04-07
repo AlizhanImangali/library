@@ -91,7 +91,10 @@ func (s *storage) prepareArgs(data Author) (sets []string, args []any) {
 		args = append(args, data.Pseudonym)
 		sets = append(sets, fmt.Sprintf("pseudonym=$%d", len(args)))
 	}
-
+	if data.FullName != nil {
+		args = append(args, data.FullName)
+		sets = append(sets, fmt.Sprintf("full_name=$%d", len(args)))
+	}
 	if data.Specialty != nil {
 		args = append(args, data.Specialty)
 		sets = append(sets, fmt.Sprintf("specialty=$%d", len(args)))

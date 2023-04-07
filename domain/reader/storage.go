@@ -30,8 +30,8 @@ func (s *storage) CreateRow(data Reader) (dest string, err error) {
 	defer cancel()
 
 	query := `
-		INSERT INTO Readers (full_name,book_list)
-		VALUES ($1, $2, $3)
+		INSERT INTO Readers (fullname,booklist)
+		VALUES ($1, $2)
 		RETURNING id`
 
 	args := []any{data.FullName, data.BookList}
@@ -46,7 +46,7 @@ func (s *storage) GetRowByID(id string) (dest Reader, err error) {
 	defer cancel()
 
 	query := `
-		SELECT created_at, updated_at,full_name,book_list 
+		SELECT id,fullname,booklist 
 		FROM readers
 		WHERE id=$1`
 
@@ -62,8 +62,9 @@ func (s *storage) SelectRows() (dest []Reader, err error) {
 	defer cancel()
 
 	query := `
-		SELECT created_at, updated_at, id, full_name,book_list
-		FROM readers`
+		SELECT id, fullname,booklist
+		FROM readers
+		ORDER BY id`
 
 	err = s.db.SelectContext(ctx, &dest, query)
 
@@ -90,6 +91,10 @@ func (s *storage) prepareArgs(data Reader) (sets []string, args []any) {
 	if data.BookList != nil {
 		args = append(args, data.BookList)
 		sets = append(sets, fmt.Sprintf("bookList=$%d", len(args)))
+	}
+	if data.FullName != nil {
+		args = append(args, data.FullName)
+		sets = append(sets, fmt.Sprintf("fullName=$%d", len(args)))
 	}
 	return
 }

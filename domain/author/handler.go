@@ -42,7 +42,7 @@ func (h *handler) Create(c echo.Context) (err error) {
 
 func (h *handler) Get(c echo.Context) (err error) {
 	id := c.Param("id")
-	
+
 	data, err := h.storage.GetRowByID(id)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())

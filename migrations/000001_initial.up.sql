@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS books
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      id         SERIAL PRIMARY KEY,
-     name       VARCHAR NOT NULL,
+     bname      VARCHAR NOT NULL,
      genre      VARCHAR NOT NULL,
-     code_isbn  VARCHAR NOT NULL
+     codeisbn   VARCHAR NOT NULL
   );
 
 CREATE TABLE IF NOT EXISTS readers
@@ -23,6 +23,6 @@ CREATE TABLE IF NOT EXISTS readers
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      id         SERIAL PRIMARY KEY,
-     full_name  VARCHAR NOT NULL,
-     book_list  VARCHAR NOT NULL
+     fullName  VARCHAR NOT NULL,
+     bookList  VARCHAR NOT NULL
   );

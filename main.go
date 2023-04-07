@@ -79,6 +79,9 @@ func main() {
 	//health
 	health := apiGroup.Group("/health")
 	health.GET("", healthHandler.Health)
+
+	//special routes
+
 	// start server
 	e.Logger.Fatal(e.Start(":8081"))
 }

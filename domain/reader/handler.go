@@ -24,7 +24,7 @@ func NewHandler(storage Storage) Handler {
 }
 func (h *handler) Create(c echo.Context) (err error) {
 	data := Reader{}
-	if err = c.Bind(data); err != nil {
+	if err = c.Bind(&data); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	data.ID, err = h.storage.CreateRow(data)
@@ -50,7 +50,7 @@ func (h *handler) GetAll(c echo.Context) error {
 }
 func (h *handler) Update(c echo.Context) (err error) {
 	data := Reader{}
-	if err := c.Bind(&data); err != nil {
+	if err = c.Bind(&data); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	data.ID = c.Param("id")
